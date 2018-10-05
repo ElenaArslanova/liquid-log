@@ -33,7 +33,7 @@ public class ActionDoneParserTest {
     @Test
     public void mustParseEditObject() {
         //given
-        ActionDoneParser parser=  new ActionDoneParser();
+        ActionDoneParser parser = new ActionDoneParser();
 
         //when
         parser.parseLine("Done(10): EditObjectAction");
@@ -76,6 +76,18 @@ public class ActionDoneParserTest {
 
         //then:
         Assert.assertEquals(7, parser.geListActions());
+    }
+
+    @Test
+    public void mustParseGetCatalogsAction(){
+        //given
+        ActionDoneParser parser = new ActionDoneParser();
+
+        //when
+        parser.parseLine("Done(10): GetCatalogsAction");
+
+        //then
+        Assert.assertEquals(1, parser.getGetCatalogsAction());
     }
 
     @Test
