@@ -33,8 +33,9 @@
     Number dtos[] = (Number[])request.getAttribute(Constants.PerformedActions.GET_DT_OBJECT_ACTIONS);
     Number search[] = (Number[])request.getAttribute(Constants.PerformedActions.SEARCH_ACTIONS);
     Number actionsSumm[] = (Number[])request.getAttribute(Constants.PerformedActions.ACTIONS_COUNT);
-    
-    
+    Number catalogsActions[] = (Number[])request.getAttribute(Constants.PerformedActions.GET_CATALOGS_ACTION);
+
+
   //Prepare links
   	String path="";
   	String custom = "";
@@ -42,9 +43,9 @@
   	Object year = request.getAttribute("year");
   	Object month = request.getAttribute("month");
   	Object day = request.getAttribute("day");
-      
+
       String countParam = (String)request.getParameter("count");
-      
+
   	String params = "";
   	String datePath = "";
 
@@ -67,11 +68,11 @@
   	    Object from = request.getAttribute("from");
   	  	Object to = request.getAttribute("to");
   	  	Object maxResults = request.getAttribute("maxResults");
-  	  	
+
   	  	StringBuilder sb = new StringBuilder();
   	  	path = sb.append("?from=").append(from).append("&to=").append(to).append("&maxResults=").append(maxResults).toString();
   	}
-      
+
 %>
 
 <div class="container">
@@ -96,8 +97,9 @@
 <div class="scroll-container">
 	<table class="table table-fixed header-fixed">
         <thead class="thead-inverse">
-            <th class="col-xs-4">Time</th>
+            <th class="col-xs-3">Time</th>
             <th class="col-xs-1">Summ</th>
+            <th class="col-xs-1">GetCatalogsAction</th>
             <th class="col-xs-1">Addobject</th>
             <th class="col-xs-1">EditObject</th>
             <th class="col-xs-1">GetList</th>
@@ -109,11 +111,14 @@
         <tbody >
             <% for(int i=0;i<times.length;i++) {%>
                 <tr class="row">
-                    <td class="col-xs-4" style="text-align:center;">
+                    <td class="col-xs-3" style="text-align:center;">
                        <%= new java.util.Date(times[i].longValue()).toString() %>
                     </td>
                     <td class="col-xs-1">
                         <%= actionsSumm[i].intValue() %>
+                    </td>
+                    <td class="col-xs-1">
+                        <%= catalogsActions[i].intValue() %>
                     </td>
                     <td class="col-xs-1" >
                         <%= add[i].intValue() %>
@@ -153,6 +158,7 @@ var form = [];
 var dtos = [];
 var search = [];
 var summ = [];
+var catalogsActions = [];
 
 <% for(int i=0;i<times.length;i++) {%>
     times.push((<%=times[i]%>));
@@ -164,7 +170,7 @@ var summ = [];
     dtos.push([new Date(<%= times[i] %>), <%= dtos[i].intValue() %>]);
     search.push([new Date(<%= times[i] %>), <%= search[i].intValue() %>]);
     summ.push([new Date(<%= times[i] %>), <%= actionsSumm[i].intValue() %>]);
-
+    catalogsActions.push([new Date(<%= times[i] %>), <%= catalogsActions[i].intValue() %>]);
 <% } %>
 
 document.getElementById('date_range').innerHTML += 'From: '+new Date(times[<%=times.length%>-1])+'<br/>To:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' +new Date(times[0])
@@ -193,6 +199,9 @@ if(localStorage.getItem('searchActions')==null){
 if(localStorage.getItem('summary')==null){
     localStorage.setItem('summary', 'true');
 }
+if(localStorage.getItem('getCatalogsAction')==null){
+    localStorage.setItem('getCatalogsAction', 'false');
+}
 
 var addVisible = localStorage.getItem('addActions')==='true';
 var editVisible = localStorage.getItem('editActions')==='true';
@@ -202,6 +211,7 @@ var	formVisible = localStorage.getItem('formActions')==='true';
 var dtosVisible = localStorage.getItem('dtObjectActions')==='true';
 var searchVisible = localStorage.getItem('searchActions')==='true';
 var summVisible = localStorage.getItem('summary')==='true';
+var catalogsVisible = localStorage.getItem('getCatalogsAction')==='true';
 
 Highcharts.setOptions({
 	global: {
@@ -282,6 +292,9 @@ var myChart = Highcharts.chart('actions-chart-container', {
                         if(event.target.index==7){
                             localStorage.setItem('summary', !series[7].visible);
                         }
+                        if(event.target.index==8){
+                            localStorage.setItem('getCatalogsAction', !series[8].visible);
+                        }
                     }
                 }
             }
@@ -322,11 +335,16 @@ var myChart = Highcharts.chart('actions-chart-container', {
             data: search,
             visible: searchVisible,
             turboThreshold: 10000
-        }, {
+        } ,{
             name: 'Summary',
             data: summ,
             visible: summVisible,
             turboThreshold: 10000
+        }, {
+           name: 'GetCatalogsAction',
+           data: catalogsActions,
+           visible: catalogsVisible,
+           turboThreshold: 10000
         }]
 });
 
