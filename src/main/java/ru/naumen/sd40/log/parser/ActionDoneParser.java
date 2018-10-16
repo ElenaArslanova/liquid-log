@@ -12,7 +12,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 /**
  * Created by doki on 22.10.16.
  */
-public class ActionDoneParser
+public class ActionDoneParser implements DataParser
 {
     private static Set<String> EXCLUDED_ACTIONS = new HashSet<>();
 
@@ -169,7 +169,8 @@ public class ActionDoneParser
         return nan;
     }
 
-    public void parseLine(String line)
+    @Override
+    public void parseLine(String line, DataSet dataSet)
     {
         Matcher matcher = doneRegEx.matcher(line);
 

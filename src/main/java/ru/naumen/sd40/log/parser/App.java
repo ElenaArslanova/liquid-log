@@ -9,7 +9,12 @@ import java.util.HashMap;
 import org.influxdb.dto.BatchPoints;
 
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.sd40.log.parser.GCParser.GCTimeParser;
+import ru.naumen.sd40.log.parser.gc.GCDataParser;
+import ru.naumen.sd40.log.parser.gc.GCTimeParser;
+import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
+import ru.naumen.sd40.log.parser.sdng.SdngTimeParser;
+import ru.naumen.sd40.log.parser.top.TopDataParser;
+import ru.naumen.sd40.log.parser.top.TopTimeParser;
 
 /**
  * Created by doki on 22.10.16.
@@ -53,72 +58,54 @@ public class App
 
         HashMap<Long, DataSet> data = new HashMap<>();
 
-        TimeParser timeParser = new TimeParser();
-        GCTimeParser gcTime = new GCTimeParser();
-        if (args.length > 2)
-        {
-            timeParser = new TimeParser(args[2]);
-            gcTime = new GCTimeParser(args[2]);
-        }
+        DataParser dataParser;
+        TimeParser timeParser;
 
         String mode = System.getProperty("parse.mode", "");
         switch (mode)
         {
         case "sdng":
             //Parse sdng
-            try (BufferedReader br = new BufferedReader(new FileReader(log), 32 * 1024 * 1024))
-            {
-                String line;
-                while ((line = br.readLine()) != null)
-                {
-                    long time = timeParser.parseLine(line);
-
-                    if (time == 0)
-                    {
-                        continue;
-                    }
-
-                    int min5 = 5 * 60 * 1000;
-                    long count = time / min5;
-                    long key = count * min5;
-
-                    data.computeIfAbsent(key, k -> new DataSet()).parseLine(line);
-                }
-            }
+            dataParser = new SdngDataParser();
+            timeParser = new SdngTimeParser();
             break;
         case "gc":
             //Parse gc log
-            try (BufferedReader br = new BufferedReader(new FileReader(log)))
-            {
-                String line;
-                while ((line = br.readLine()) != null)
-                {
-                    long time = gcTime.parseTime(line);
-
-                    if (time == 0)
-                    {
-                        continue;
-                    }
-
-                    int min5 = 5 * 60 * 1000;
-                    long count = time / min5;
-                    long key = count * min5;
-                    data.computeIfAbsent(key, k -> new DataSet()).parseGcLine(line);
-                }
-            }
+            dataParser = new GCDataParser();
+            timeParser = new GCTimeParser();
             break;
         case "top":
-            TopParser topParser = new TopParser(log, data);
-            if (args.length > 2)
-            {
-                topParser.configureTimeZone(args[2]);
-            }
-            //Parse top
-            topParser.parse();
+            timeParser = new TopTimeParser(log);
+            dataParser = new TopDataParser();
             break;
         default:
             throw new IllegalArgumentException(
                     "Unknown parse mode! Availiable modes: sdng, gc, top. Requested mode: " + mode);
+        }
+
+        if (args.length > 2)
+        {
+            timeParser.configureTimeZone(args[2]);
+        }
+
+        try (BufferedReader br = new BufferedReader(new FileReader(log), 32 * 1024 * 1024))
+        {
+            String line;
+            while ((line = br.readLine()) != null)
+            {
+                long time = timeParser.parseLine(line);
+
+                if (time == 0)
+                {
+                    continue;
+                }
+
+                int min5 = 5 * 60 * 1000;
+                long count = time / min5;
+                long key = count * min5;
+
+                dataParser.parseLine(line, data.computeIfAbsent(key, k -> new DataSet()));
+            }
         }
 
         if (System.getProperty("NoCsv") == null)
@@ -142,7 +129,7 @@ public class App
                 finalStorage.storeActionsFromLog(finalPoints, finalInfluxDb, k, dones, erros);
             }
 
-            GCParser gc = set.getGc();
+            GCDataParser gc = set.getGc();
             if (!gc.isNan())
             {
                 finalStorage.storeGc(finalPoints, finalInfluxDb, k, gc);
