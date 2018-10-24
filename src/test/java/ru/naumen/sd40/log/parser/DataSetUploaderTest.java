@@ -30,13 +30,21 @@ public class DataSetUploaderTest {
     }
 
     @Test
-    public void mustUploadOnClose() throws DBCloseException{
+    public void mustUploadOnCloseIfHasData() throws DBCloseException{
         try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)) {
             //when
             dataSetUploader.get(0L);
         }
         //then
         verify(dbUploader).upload(eq(0L), any(DataSet.class));
+    }
+
+    @Test
+    public void mustNotUploadOnCloseIfHasNoData() throws DBCloseException{
+        try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)) {
+        }
+
+        verify(dbUploader, never()).upload(anyLong(), any(DataSet.class));
     }
 
     @Test(expected=InvalidParameterException.class)

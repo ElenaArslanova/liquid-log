@@ -15,7 +15,9 @@ public class DataSetUploader implements AutoCloseable{
     }
 
     public void close() throws DBCloseException {
-        upload();
+        if (currentKey != -1){
+            upload();
+        }
         influxUploader.close();
     }
 
