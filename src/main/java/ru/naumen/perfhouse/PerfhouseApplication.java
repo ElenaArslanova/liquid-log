@@ -19,7 +19,7 @@ public class PerfhouseApplication extends SpringBootServletInitializer
     }
 
 
-    public static void main(String[] args) throws IOException, ParseException
+    public static void main(String[] args) throws IOException, ParseException, DBCloseException
     {
         if (System.getProperty("Parser") != null)
         {

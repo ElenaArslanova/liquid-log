@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 
+import ru.naumen.perfhouse.DBCloseException;
 import ru.naumen.perfhouse.influx.InfluxUploader;
 import ru.naumen.sd40.log.parser.gc.GCDataParser;
 import ru.naumen.sd40.log.parser.gc.GCTimeParser;
@@ -25,7 +26,8 @@ public class LogParser
      * @throws IOException
      * @throws ParseException
      */
-    public static void main(String[] args) throws IOException, ParseException, InvalidParameterException
+    public static void main(String[] args) throws IOException, ParseException, InvalidParameterException,
+            DBCloseException
     {
         if (args.length <= 1){
             System.out.print("Not enough input parameters provided for db initialization");
@@ -33,11 +35,6 @@ public class LogParser
         }
 
         String influxDb = args[1].replaceAll("-", "_");
-        DataSetUploader dataSetUploader = new DataSetUploader(new InfluxUploader(
-                influxDb,
-                System.getProperty("influx.host"),
-                System.getProperty("influx.user"),
-                System.getProperty("influx.password")));
 
         String log = args[0];
 
@@ -76,7 +73,12 @@ public class LogParser
             System.out.print("Timestamp;Actions;Min;Mean;Stddev;50%%;95%%;99%%;99.9%%;Max;Errors\n");
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(log), 32 * 1024 * 1024))
+        try (BufferedReader br = new BufferedReader(new FileReader(log), 32 * 1024 * 1024);
+             DataSetUploader dataSetUploader = new DataSetUploader(new InfluxUploader(
+                     influxDb,
+                     System.getProperty("influx.host"),
+                     System.getProperty("influx.user"),
+                     System.getProperty("influx.password"))))
         {
             String line;
             while ((line = br.readLine()) != null)
@@ -95,6 +97,5 @@ public class LogParser
                 dataParser.parseLine(line, dataSetUploader.get(key));
             }
         }
-        dataSetUploader.close();
     }
 }

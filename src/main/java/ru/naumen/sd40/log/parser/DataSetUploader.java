@@ -1,10 +1,11 @@
 package ru.naumen.sd40.log.parser;
 
 import ru.naumen.perfhouse.DBUploader;
+import ru.naumen.perfhouse.DBCloseException;
 
 import java.security.InvalidParameterException;
 
-public class DataSetUploader {
+public class DataSetUploader implements AutoCloseable{
     private DBUploader influxUploader;
     private long currentKey = -1;
     private DataSet currentDataSet;
@@ -13,7 +14,7 @@ public class DataSetUploader {
         this.influxUploader = influxUploader;
     }
 
-    public void close(){
+    public void close() throws DBCloseException {
         upload();
         influxUploader.close();
     }
