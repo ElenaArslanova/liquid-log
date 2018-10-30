@@ -1,0 +1,58 @@
+package ru.naumen.sd40.log.parser;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import ru.naumen.perfhouse.DBCloseException;
+import ru.naumen.perfhouse.DBUploader;
+
+import java.security.InvalidParameterException;
+
+import static org.mockito.Mockito.*;
+
+public class DataSetUploaderTest {
+    private DBUploader dbUploader;
+
+    @Before
+    public void setUp(){
+        dbUploader = Mockito.mock(DBUploader.class);
+    }
+
+    @Test
+    public void mustUploadOnIncreasedKey() throws DBCloseException {
+        try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)){
+            //when
+            dataSetUploader.get(0L);
+            dataSetUploader.get(5L);
+        }
+        //then
+        verify(dbUploader).upload(eq(0L), any(DataSet.class));
+    }
+
+    @Test
+    public void mustUploadOnCloseIfHasData() throws DBCloseException{
+        try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)) {
+            //when
+            dataSetUploader.get(0L);
+        }
+        //then
+        verify(dbUploader).upload(eq(0L), any(DataSet.class));
+    }
+
+    @Test
+    public void mustNotUploadOnCloseIfHasNoData() throws DBCloseException{
+        try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)) {
+        }
+
+        verify(dbUploader, never()).upload(anyLong(), any(DataSet.class));
+    }
+
+    @Test(expected=InvalidParameterException.class)
+    public void mustThrowOnInvalidOrder() throws DBCloseException{
+        try (DataSetUploader dataSetUploader = new DataSetUploader(dbUploader)) {
+            //when
+            dataSetUploader.get(5L);
+            dataSetUploader.get(0L);
+        }
+    }
+}
