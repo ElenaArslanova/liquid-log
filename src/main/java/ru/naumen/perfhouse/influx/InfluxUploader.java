@@ -12,10 +12,12 @@ public class InfluxUploader implements DBUploader{
     private InfluxDAO storage;
     private BatchPoints batchPoints;
     private String influxDb;
+    private boolean requiredLogTrace;
 
-    public InfluxUploader(String influxDb, String host, String user, String password){
+    public InfluxUploader(String influxDb, String host, String user, String password, boolean requiredLogTrace){
         storage = new InfluxDAO(host, user, password);
         this.influxDb = influxDb;
+        this.requiredLogTrace = requiredLogTrace;
         connect();
     }
 
@@ -29,7 +31,7 @@ public class InfluxUploader implements DBUploader{
         ActionDoneParser dones = dataSet.getActionsDone();
         dones.calculate();
         ErrorParser errors = dataSet.getErrors();
-        if (System.getProperty("NoCsv") == null)
+        if (requiredLogTrace)
         {
             System.out.print(String.format("%d;%d;%f;%f;%f;%f;%f;%f;%f;%f;%d\n", key, dones.getCount(),
                     dones.getMin(), dones.getMean(), dones.getStddev(), dones.getPercent50(), dones.getPercent95(),

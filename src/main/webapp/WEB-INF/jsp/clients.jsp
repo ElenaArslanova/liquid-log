@@ -41,6 +41,45 @@
     	}
     </script>
 <div class="container">
+    <h2>Parse log</h2>
+    <form action="/parse", method="post", enctype="multipart/form-data">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Database:</label>
+                <input class="form-control" type="text" name="influxDb" required>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Timezone:</label>
+                <input class="form-control" type="text" name="timeZone" value="GMT" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label>Log filepath:</label>
+                <input class="form-control" type="text" name="logPath" required>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label>Mode:</label>
+                <select class="form-control" name="mode" required>
+                    <option value="sdng">SDNG</option>
+                    <option value="gc">GC</option>
+                    <option value="top">TOP</option>
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Log tracing</label>
+                <select class="form-control" name="logTrace">
+                    <option value="required">Yes</option>
+                    <option value="">No</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-success">Parse</button>
+    </form>
+</div>
+<div class="container">
 	<br>
 	<div class="alert alert-info">
   		<h3><strong>Attention!</strong><br>All requests for stored data are made with UTC time.<br>Requested data will be displayed in your browsers timezone.</h3>

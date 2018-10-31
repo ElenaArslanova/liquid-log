@@ -20,65 +20,52 @@ import ru.naumen.sd40.log.parser.top.TopTimeParser;
  */
 public class LogParser
 {
-    /**
-     * 
-     * @param args [0] - sdng.log, [1] - gc.log, [2] - top, [3] - dbName, [4] timezone
-     * @throws IOException
-     * @throws ParseException
-     */
-    public static void main(String[] args) throws IOException, ParseException, InvalidParameterException,
-            DBCloseException
-    {
-        if (args.length <= 1){
-            System.out.print("Not enough input parameters provided for db initialization");
-            System.exit(1);
-        }
-
-        String influxDb = args[1].replaceAll("-", "_");
-
-        String log = args[0];
-
+    public static void parse(String influxDb,
+                             String mode,
+                             String logPath,
+                             String timeZone,
+                             boolean requiredLogTrace) throws IOException, ParseException, InvalidParameterException,
+            DBCloseException{
+        influxDb = influxDb.replaceAll("-", "_");
         DataParser dataParser;
         TimeParser timeParser;
 
-        String mode = System.getProperty("parse.mode", "");
         switch (mode)
         {
-        case "sdng":
-            //Parse sdng
-            dataParser = new SdngDataParser();
-            timeParser = new SdngTimeParser();
-            break;
-        case "gc":
-            //Parse gc log
-            dataParser = new GCDataParser();
-            timeParser = new GCTimeParser();
-            break;
-        case "top":
-            timeParser = new TopTimeParser(log);
-            dataParser = new TopDataParser();
-            break;
-        default:
-            throw new IllegalArgumentException(
-                    "Unknown parse mode! Availiable modes: sdng, gc, top. Requested mode: " + mode);
+            case "sdng":
+                //Parse sdng
+                dataParser = new SdngDataParser();
+                timeParser = new SdngTimeParser();
+                break;
+            case "gc":
+                //Parse gc log
+                dataParser = new GCDataParser();
+                timeParser = new GCTimeParser();
+                break;
+            case "top":
+                timeParser = new TopTimeParser(logPath);
+                dataParser = new TopDataParser();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unknown parse mode! Availiable modes: sdng, gc, top. Requested mode: " + mode);
         }
 
-        if (args.length > 2)
-        {
-            timeParser.configureTimeZone(args[2]);
+        if (timeZone != null) {
+            timeParser.configureTimeZone(timeZone);
         }
 
-        if (System.getProperty("NoCsv") == null)
-        {
+        if (requiredLogTrace){
             System.out.print("Timestamp;Actions;Min;Mean;Stddev;50%%;95%%;99%%;99.9%%;Max;Errors\n");
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(log), 32 * 1024 * 1024);
+        try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024);
              DataSetUploader dataSetUploader = new DataSetUploader(new InfluxUploader(
                      influxDb,
                      System.getProperty("influx.host"),
                      System.getProperty("influx.user"),
-                     System.getProperty("influx.password"))))
+                     System.getProperty("influx.password"),
+                     requiredLogTrace)))
         {
             String line;
             while ((line = br.readLine()) != null)
