@@ -1,41 +1,39 @@
 package ru.naumen.sd40.log.parser;
 
-import ru.naumen.sd40.log.parser.gc.GCDataParser;
+import ru.naumen.sd40.log.parser.data.ActionDoneData;
+import ru.naumen.sd40.log.parser.data.ErrorData;
+import ru.naumen.sd40.log.parser.data.GCData;
+import ru.naumen.sd40.log.parser.data.TopData;
 
 /**
  * Created by doki on 22.10.16.
  */
 public class DataSet
 {
-    private ActionDoneParser actionsDone;
-    private ErrorParser errors;
-    private GCDataParser gc;
-    private TopData cpuData = new TopData();
+    private ActionDoneData actionsDoneData;
+    private ErrorData errorsData;
+    private GCData gcData;
+    private TopData topData;
 
     public DataSet()
     {
-        actionsDone = new ActionDoneParser();
-        errors = new ErrorParser();
-        gc = new GCDataParser();
+        actionsDoneData = new ActionDoneData();
+        errorsData = new ErrorData();
+        gcData = new GCData();
+        topData = new TopData();
     }
 
-    public ActionDoneParser getActionsDone()
+    public ActionDoneData getActionsDoneData() { return actionsDoneData; }
+
+    public ErrorData getErrorsData() { return errorsData; }
+
+    public GCData getGcData()
     {
-        return actionsDone;
+        return gcData;
     }
 
-    public ErrorParser getErrors()
+    public TopData getTopData()
     {
-        return errors;
-    }
-
-    public GCDataParser getGc()
-    {
-        return gc;
-    }
-
-    public TopData cpuData()
-    {
-        return cpuData;
+        return topData;
     }
 }
