@@ -1,32 +1,31 @@
 package ru.naumen.sd40.log.parser.top;
 
+import org.springframework.stereotype.Component;
 import ru.naumen.sd40.log.parser.DataParser;
 import ru.naumen.sd40.log.parser.DataSet;
 
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class TopDataParser implements DataParser {
-    private Pattern cpuAndMemPattren = Pattern
+    private static final Pattern CPU_AND_MEM_PATTERN = Pattern
             .compile("^ *\\d+ \\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ +\\S+ \\S+ +(\\S+) +(\\S+) +\\S+ java");
 
     @Override
-    public void parseLine(String line, DataSet dataSet) throws IOException, ParseException {
+    public void parseLine(String line, DataSet dataSet){
         //get la
         Matcher la = Pattern.compile(".*load average:(.*)").matcher(line);
         if (la.find()) {
-            dataSet.cpuData().addLa(Double.parseDouble(la.group(1).split(",")[0].trim()));
+            dataSet.getTopData().addLa(Double.parseDouble(la.group(1).split(",")[0].trim()));
             return;
         }
 
         //get cpu and mem
-        Matcher cpuAndMemMatcher = cpuAndMemPattren.matcher(line);
+        Matcher cpuAndMemMatcher = CPU_AND_MEM_PATTERN.matcher(line);
         if (cpuAndMemMatcher.find()) {
-            dataSet.cpuData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));
-            dataSet.cpuData().addMem(Double.valueOf(cpuAndMemMatcher.group(2)));
-            return;
+            dataSet.getTopData().addCpu(Double.valueOf(cpuAndMemMatcher.group(1)));
+            dataSet.getTopData().addMem(Double.valueOf(cpuAndMemMatcher.group(2)));
         }
     }
 }

@@ -2,11 +2,11 @@ package ru.naumen.perfhouse.influx;
 
 import org.influxdb.dto.BatchPoints;
 import ru.naumen.perfhouse.DBUploader;
-import ru.naumen.sd40.log.parser.ActionDoneParser;
 import ru.naumen.sd40.log.parser.DataSet;
-import ru.naumen.sd40.log.parser.ErrorParser;
-import ru.naumen.sd40.log.parser.TopData;
-import ru.naumen.sd40.log.parser.gc.GCDataParser;
+import ru.naumen.sd40.log.parser.data.ActionDoneData;
+import ru.naumen.sd40.log.parser.data.ErrorData;
+import ru.naumen.sd40.log.parser.data.GCData;
+import ru.naumen.sd40.log.parser.data.TopData;
 
 public class InfluxUploader implements DBUploader{
     private InfluxDAO storage;
@@ -28,9 +28,9 @@ public class InfluxUploader implements DBUploader{
     }
 
     public void upload(Long key, DataSet dataSet){
-        ActionDoneParser dones = dataSet.getActionsDone();
+        ActionDoneData dones = dataSet.getActionsDoneData();
         dones.calculate();
-        ErrorParser errors = dataSet.getErrors();
+        ErrorData errors = dataSet.getErrorsData();
         if (requiredLogTrace)
         {
             System.out.print(String.format("%d;%d;%f;%f;%f;%f;%f;%f;%f;%f;%d\n", key, dones.getCount(),
@@ -42,13 +42,13 @@ public class InfluxUploader implements DBUploader{
             storage.storeActionsFromLog(batchPoints, influxDb, key, dones, errors);
         }
 
-        GCDataParser gc = dataSet.getGc();
+        GCData gc = dataSet.getGcData();
         if (!gc.isNan())
         {
             storage.storeGc(batchPoints, influxDb, key, gc);
         }
 
-        TopData cpuData = dataSet.cpuData();
+        TopData cpuData = dataSet.getTopData();
         if (!cpuData.isNan())
         {
             storage.storeTop(batchPoints, influxDb, key, cpuData);
