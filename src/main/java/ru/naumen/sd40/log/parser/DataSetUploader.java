@@ -30,7 +30,7 @@ public class DataSetUploader implements AutoCloseable{
                 upload();
             }
             currentKey = key;
-            currentDataSet = new DataSet();
+            currentDataSet = DataSet.getInstance();
             return currentDataSet;
         }
         throw new InvalidParameterException(String.format("Key %d should have been already processed", key));

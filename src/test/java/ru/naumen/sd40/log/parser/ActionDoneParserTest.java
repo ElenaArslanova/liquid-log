@@ -5,7 +5,7 @@ import org.junit.Test;
 import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
 
 public class ActionDoneParserTest{
-    private DataSet dataSet = new DataSet();
+    private DataSet dataSet = DataSet.getInstance();
 
     @Test
     public void mustParseAddAction() {
