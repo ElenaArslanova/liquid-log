@@ -10,23 +10,17 @@ import ru.naumen.sd40.log.parser.data.TopData;
  */
 public class DataSet
 {
-    private static DataSet dataSet = new DataSet();
-
     private ActionDoneData actionsDoneData;
     private ErrorData errorsData;
     private GCData gcData;
     private TopData topData;
 
-    private DataSet()
+    public DataSet()
     {
         actionsDoneData = new ActionDoneData();
         errorsData = new ErrorData();
         gcData = new GCData();
         topData = new TopData();
-    }
-
-    public static DataSet getInstance(){
-        return dataSet;
     }
 
     public ActionDoneData getActionsDoneData() { return actionsDoneData; }
