@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.DBCloseException;
-import ru.naumen.perfhouse.DBUploader;
+import ru.naumen.perfhouse.uploaders.DBUploader;
 
 import java.security.InvalidParameterException;
 

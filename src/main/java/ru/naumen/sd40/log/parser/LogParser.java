@@ -7,7 +7,6 @@ import java.security.InvalidParameterException;
 import java.text.ParseException;
 
 import ru.naumen.perfhouse.DBCloseException;
-import ru.naumen.perfhouse.influx.InfluxUploader;
 import ru.naumen.sd40.log.parser.gc.GCDataParser;
 import ru.naumen.sd40.log.parser.gc.GCTimeParser;
 import ru.naumen.sd40.log.parser.sdng.SdngDataParser;

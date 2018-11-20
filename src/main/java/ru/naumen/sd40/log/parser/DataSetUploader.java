@@ -1,6 +1,6 @@
 package ru.naumen.sd40.log.parser;
 
-import ru.naumen.perfhouse.DBUploader;
+import ru.naumen.perfhouse.uploaders.DBUploader;
 import ru.naumen.perfhouse.DBCloseException;
 
 import java.security.InvalidParameterException;
