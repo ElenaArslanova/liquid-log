@@ -1,17 +1,21 @@
-package ru.naumen.sd40.log.parser;
+package ru.naumen.perfhouse.uploaders;
 
 import ru.naumen.perfhouse.uploaders.DBUploader;
 import ru.naumen.perfhouse.DBCloseException;
+import ru.naumen.sd40.log.parser.dataset.DataSet;
+import ru.naumen.sd40.log.parser.dataset.DataSetFactory;
 
 import java.security.InvalidParameterException;
 
-public class DataSetUploader implements AutoCloseable{
-    private DBUploader influxUploader;
+public class DataSetUploader<T extends DataSet> implements AutoCloseable{
+    private DBUploader<T> influxUploader;
+    private DataSetFactory<T> dataSetFactory;
     private long currentKey = -1;
-    private DataSet currentDataSet;
+    private T currentDataSet;
 
-    public DataSetUploader(DBUploader influxUploader){
+    public DataSetUploader(DBUploader<T> influxUploader, DataSetFactory<T> dataSetFactory){
         this.influxUploader = influxUploader;
+        this.dataSetFactory = dataSetFactory;
     }
 
     public void close() throws DBCloseException {
@@ -30,7 +34,7 @@ public class DataSetUploader implements AutoCloseable{
                 upload();
             }
             currentKey = key;
-            currentDataSet = new DataSet();
+            currentDataSet = dataSetFactory.create();
             return currentDataSet;
         }
         throw new InvalidParameterException(String.format("Key %d should have been already processed", key));

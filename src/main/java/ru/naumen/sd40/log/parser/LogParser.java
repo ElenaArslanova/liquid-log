@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 
-import ru.naumen.perfhouse.DBCloseException;
+import ru.naumen.perfhouse.uploaders.*;
 import ru.naumen.sd40.log.parser.gc.GCDataParser;
 import ru.naumen.sd40.log.parser.gc.GCTimeParser;
 import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
@@ -23,11 +23,19 @@ public class LogParser
                              String mode,
                              String logPath,
                              String timeZone,
-                             boolean requiredLogTrace) throws IOException, ParseException, InvalidParameterException,
-            DBCloseException{
+                             boolean requiredLogTrace) throws IOException, ParseException, InvalidParameterException{
         influxDb = influxDb.replaceAll("-", "_");
+
+        UploaderParams uploaderParams = new UploaderParams(
+                influxDb,
+                System.getProperty("influx.host"),
+                System.getProperty("influx.user"),
+                System.getProperty("influx.password"),
+                requiredLogTrace);
+
         DataParser dataParser;
         TimeParser timeParser;
+        DataSetUploaderFactory uploaderFactory;
 
         switch (mode)
         {
@@ -35,20 +43,25 @@ public class LogParser
                 //Parse sdng
                 dataParser = new SdngDataParser();
                 timeParser = new SdngTimeParser();
+                uploaderFactory = new SdngDataSetUploaderFactory();
                 break;
             case "gc":
                 //Parse gc log
                 dataParser = new GCDataParser();
                 timeParser = new GCTimeParser();
+                uploaderFactory = new GCDataSetUploaderFactory();
                 break;
             case "top":
                 timeParser = new TopTimeParser(logPath);
                 dataParser = new TopDataParser();
+                uploaderFactory = new TopDataSetUploaderFactory();
                 break;
             default:
                 throw new IllegalArgumentException(
                         "Unknown parse mode! Availiable modes: sdng, gc, top. Requested mode: " + mode);
         }
+
+        DataSetUploader dataSetUploader = uploaderFactory.create(uploaderParams);
 
         if (timeZone != null) {
             timeParser.configureTimeZone(timeZone);
@@ -58,13 +71,7 @@ public class LogParser
             System.out.print("Timestamp;Actions;Min;Mean;Stddev;50%%;95%%;99%%;99.9%%;Max;Errors\n");
         }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024);
-             DataSetUploader dataSetUploader = new DataSetUploader(new InfluxUploader(
-                     influxDb,
-                     System.getProperty("influx.host"),
-                     System.getProperty("influx.user"),
-                     System.getProperty("influx.password"),
-                     requiredLogTrace)))
+        try (BufferedReader br = new BufferedReader(new FileReader(logPath), 32 * 1024 * 1024))
         {
             String line;
             while ((line = br.readLine()) != null)

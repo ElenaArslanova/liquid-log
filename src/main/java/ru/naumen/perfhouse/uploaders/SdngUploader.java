@@ -1,14 +1,12 @@
 package ru.naumen.perfhouse.uploaders;
 
-import org.springframework.stereotype.Component;
 import ru.naumen.sd40.log.parser.data.ActionDoneData;
 import ru.naumen.sd40.log.parser.data.ErrorData;
 import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
 
-@Component
 public class SdngUploader extends DBUploader<SdngDataSet>{
-    public SdngUploader(String influxDb, String host, String user, String password, boolean requiredLogTrace){
-        super(influxDb, host, user, password, requiredLogTrace);
+    public SdngUploader(UploaderParams uploaderParams){
+        super(uploaderParams);
     }
 
     @Override

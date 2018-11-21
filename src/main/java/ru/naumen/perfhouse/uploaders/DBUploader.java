@@ -11,10 +11,10 @@ public abstract class DBUploader<T extends DataSet> implements AutoCloseable{
     protected String influxDb;
     protected boolean requiredLogTrace;
 
-    public DBUploader(String influxDb, String host, String user, String password, boolean requiredLogTrace){
-        storage = new InfluxDAO(host, user, password);
-        this.influxDb = influxDb;
-        this.requiredLogTrace = requiredLogTrace;
+    public DBUploader(UploaderParams params){
+        storage = new InfluxDAO(params.getHost(), params.getUser(), params.getPassword());
+        this.influxDb = params.getInfluxDb();
+        this.requiredLogTrace = params.isRequiredLogTrace();
         connect();
     }
 
