@@ -1,6 +1,5 @@
 package ru.naumen.perfhouse.uploaders;
 
-import ru.naumen.sd40.log.parser.data.TopData;
 import ru.naumen.sd40.log.parser.dataset.TopDataSet;
 
 public class TopUploader extends DBUploader<TopDataSet>{
@@ -10,10 +9,9 @@ public class TopUploader extends DBUploader<TopDataSet>{
 
     @Override
     public void upload(Long key, TopDataSet dataSet) {
-        TopData cpuData = dataSet.getTopData();
-        if (!cpuData.isNan())
+        if (!dataSet.isNan())
         {
-            storage.storeTop(batchPoints, influxDb, key, cpuData);
+            storage.storeTop(batchPoints, influxDb, key, dataSet);
         }
     }
 }

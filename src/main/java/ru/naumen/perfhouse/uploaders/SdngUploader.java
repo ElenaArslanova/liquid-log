@@ -1,7 +1,7 @@
 package ru.naumen.perfhouse.uploaders;
 
-import ru.naumen.sd40.log.parser.data.ActionDoneData;
-import ru.naumen.sd40.log.parser.data.ErrorData;
+import ru.naumen.sd40.log.parser.dataset.ActionDoneDataSet;
+import ru.naumen.sd40.log.parser.dataset.ErrorDataSet;
 import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
 
 public class SdngUploader extends DBUploader<SdngDataSet>{
@@ -11,9 +11,9 @@ public class SdngUploader extends DBUploader<SdngDataSet>{
 
     @Override
     public void upload(Long key, SdngDataSet dataSet) {
-        ActionDoneData dones = dataSet.getActionsDoneData();
+        ActionDoneDataSet dones = dataSet.getActionsDoneData();
         dones.calculate();
-        ErrorData errors = dataSet.getErrorsData();
+        ErrorDataSet errors = dataSet.getErrorsData();
         if (requiredLogTrace)
         {
             System.out.print(String.format("%d;%d;%f;%f;%f;%f;%f;%f;%f;%f;%d\n", key, dones.getCount(),

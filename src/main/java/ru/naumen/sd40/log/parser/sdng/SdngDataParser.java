@@ -2,8 +2,8 @@ package ru.naumen.sd40.log.parser.sdng;
 
 import org.springframework.stereotype.Component;
 import ru.naumen.sd40.log.parser.DataParser;
-import ru.naumen.sd40.log.parser.data.ActionDoneData;
-import ru.naumen.sd40.log.parser.data.ErrorData;
+import ru.naumen.sd40.log.parser.dataset.ActionDoneDataSet;
+import ru.naumen.sd40.log.parser.dataset.ErrorDataSet;
 import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
 
 import java.util.HashSet;
@@ -33,7 +33,7 @@ public class SdngDataParser implements DataParser<SdngDataSet> {
 
     public void parseErrorLine(String line, SdngDataSet dataSet)
     {
-        ErrorData errorData = dataSet.getErrorsData();
+        ErrorDataSet errorData = dataSet.getErrorsData();
         if (WARN_REG_EX.matcher(line).find())
         {
             errorData.incrementWarnCount();
@@ -49,7 +49,7 @@ public class SdngDataParser implements DataParser<SdngDataSet> {
     }
 
     public void parseActionLine(String line, SdngDataSet dataSet) {
-        ActionDoneData actionDoneData = dataSet.getActionsDoneData();
+        ActionDoneDataSet actionDoneData = dataSet.getActionsDoneData();
         Matcher matcher = DONE_REG_EX.matcher(line);
         if (matcher.find())
         {

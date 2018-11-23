@@ -1,16 +1,34 @@
 package ru.naumen.sd40.log.parser.dataset;
 
-import ru.naumen.sd40.log.parser.data.GCData;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+
+import static ru.naumen.sd40.log.parser.NumberUtils.getSafeDouble;
+import static ru.naumen.sd40.log.parser.NumberUtils.roundToTwoPlaces;
 
 public class GCDataSet implements DataSet {
-    private GCData gcData;
+    private DescriptiveStatistics ds = new DescriptiveStatistics();
 
-    public GCDataSet(){
-        gcData = new GCData();
+    public double getCalculatedAvg()
+    {
+        return roundToTwoPlaces(getSafeDouble(ds.getMean()));
     }
 
-    public GCData getGcData()
+    public long getGcTimes()
     {
-        return gcData;
+        return ds.getN();
+    }
+
+    public double getMaxGcTime()
+    {
+        return roundToTwoPlaces(getSafeDouble(ds.getMax()));
+    }
+
+    public boolean isNan()
+    {
+        return getGcTimes() == 0;
+    }
+
+    public void addValue(Double value){
+        ds.addValue(value);
     }
 }

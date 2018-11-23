@@ -1,18 +1,15 @@
 package ru.naumen.sd40.log.parser.dataset;
 
-import ru.naumen.sd40.log.parser.data.ActionDoneData;
-import ru.naumen.sd40.log.parser.data.ErrorData;
-
 public class SdngDataSet implements DataSet{
-    private ActionDoneData actionsDoneData;
-    private ErrorData errorsData;
+    private ActionDoneDataSet actionDoneDataSet;
+    private ErrorDataSet errorDataSet;
 
     public SdngDataSet(){
-        actionsDoneData = new ActionDoneData();
-        errorsData = new ErrorData();
+        actionDoneDataSet = new ActionDoneDataSet();
+        errorDataSet = new ErrorDataSet();
     }
 
-    public ActionDoneData getActionsDoneData() { return actionsDoneData; }
+    public ActionDoneDataSet getActionsDoneData() { return actionDoneDataSet; }
 
-    public ErrorData getErrorsData() { return errorsData; }
+    public ErrorDataSet getErrorsData() { return errorDataSet; }
 }

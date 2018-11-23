@@ -1,6 +1,6 @@
-package ru.naumen.sd40.log.parser.data;
+package ru.naumen.sd40.log.parser.dataset;
 
-public class ErrorData implements ParserData{
+public class ErrorDataSet implements DataSet{
     private long warnCount;
     private long errorCount;
     private long fatalCount;

@@ -17,8 +17,7 @@ public class GCDataParser implements DataParser<GCDataSet> {
         Matcher matcher = GC_EXECUTION_TIME.matcher(line);
         if (matcher.find())
         {
-            dataSet.getGcData().addValue(
-                    Double.parseDouble(matcher.group(1).trim().replace(',', '.')));
+            dataSet.addValue(Double.parseDouble(matcher.group(1).trim().replace(',', '.')));
         }
     }
 }
