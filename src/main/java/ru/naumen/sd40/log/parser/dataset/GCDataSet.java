@@ -1,11 +1,11 @@
-package ru.naumen.sd40.log.parser.data;
+package ru.naumen.sd40.log.parser.dataset;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import static ru.naumen.sd40.log.parser.NumberUtils.getSafeDouble;
 import static ru.naumen.sd40.log.parser.NumberUtils.roundToTwoPlaces;
 
-public class GCData implements ParserData{
+public class GCDataSet implements DataSet {
     private DescriptiveStatistics ds = new DescriptiveStatistics();
 
     public double getCalculatedAvg()

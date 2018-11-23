@@ -2,9 +2,9 @@ package ru.naumen.sd40.log.parser.sdng;
 
 import org.springframework.stereotype.Component;
 import ru.naumen.sd40.log.parser.DataParser;
-import ru.naumen.sd40.log.parser.DataSet;
-import ru.naumen.sd40.log.parser.data.ActionDoneData;
-import ru.naumen.sd40.log.parser.data.ErrorData;
+import ru.naumen.sd40.log.parser.dataset.ActionDoneDataSet;
+import ru.naumen.sd40.log.parser.dataset.ErrorDataSet;
+import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-public class SdngDataParser implements DataParser {
+public class SdngDataParser implements DataParser<SdngDataSet> {
     private static final Pattern DONE_REG_EX = Pattern.compile("Done\\((\\d+)\\): ?(.*?Action)");
     private static final Pattern WARN_REG_EX = Pattern.compile("^\\d+ \\[.+?\\] \\(.+?\\) WARN");
     private static final Pattern ERROR_REG_EX = Pattern.compile("^\\d+ \\[.+?\\] \\(.+?\\) ERROR");
@@ -26,14 +26,14 @@ public class SdngDataParser implements DataParser {
     }
 
     @Override
-    public void parseLine(String line, DataSet dataSet) {
+    public void parseLine(String line, SdngDataSet dataSet) {
         parseErrorLine(line, dataSet);
         parseActionLine(line, dataSet);
     }
 
-    public void parseErrorLine(String line, DataSet dataSet)
+    public void parseErrorLine(String line, SdngDataSet dataSet)
     {
-        ErrorData errorData = dataSet.getErrorsData();
+        ErrorDataSet errorData = dataSet.getErrorsData();
         if (WARN_REG_EX.matcher(line).find())
         {
             errorData.incrementWarnCount();
@@ -48,8 +48,8 @@ public class SdngDataParser implements DataParser {
         }
     }
 
-    public void parseActionLine(String line, DataSet dataSet) {
-        ActionDoneData actionDoneData = dataSet.getActionsDoneData();
+    public void parseActionLine(String line, SdngDataSet dataSet) {
+        ActionDoneDataSet actionDoneData = dataSet.getActionsDoneData();
         Matcher matcher = DONE_REG_EX.matcher(line);
         if (matcher.find())
         {

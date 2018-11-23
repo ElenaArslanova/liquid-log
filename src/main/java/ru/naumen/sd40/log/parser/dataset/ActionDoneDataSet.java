@@ -1,11 +1,11 @@
-package ru.naumen.sd40.log.parser.data;
+package ru.naumen.sd40.log.parser.dataset;
 
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class ActionDoneData implements ParserData{
+public class ActionDoneDataSet implements DataSet{
     private ArrayList<Integer> times = new ArrayList<>();
     private double min;
     private double mean;
