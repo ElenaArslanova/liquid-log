@@ -8,11 +8,11 @@ import java.text.ParseException;
 
 import ru.naumen.perfhouse.uploaders.*;
 import ru.naumen.sd40.log.parser.gc.GCDataParser;
-import ru.naumen.sd40.log.parser.gc.GCTimeParser;
+import ru.naumen.sd40.log.parser.gc.GCTimeParserFactory;
 import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
-import ru.naumen.sd40.log.parser.sdng.SdngTimeParser;
+import ru.naumen.sd40.log.parser.sdng.SdngTimeParserFactory;
 import ru.naumen.sd40.log.parser.top.TopDataParser;
-import ru.naumen.sd40.log.parser.top.TopTimeParser;
+import ru.naumen.sd40.log.parser.top.TopTimeParserFactory;
 
 /**
  * Created by doki on 22.10.16.
@@ -33,8 +33,10 @@ public class LogParser
                 System.getProperty("influx.password"),
                 requiredLogTrace);
 
+        TimeParserParams timeParserParams = new TimeParserParams(logPath);
+
         DataParser dataParser;
-        TimeParser timeParser;
+        TimeParserFactory timeParserFactory;
         DataSetUploaderFactory uploaderFactory;
 
         switch (mode)
@@ -42,17 +44,17 @@ public class LogParser
             case "sdng":
                 //Parse sdng
                 dataParser = new SdngDataParser();
-                timeParser = new SdngTimeParser();
+                timeParserFactory = new SdngTimeParserFactory();
                 uploaderFactory = new SdngDataSetUploaderFactory();
                 break;
             case "gc":
                 //Parse gc log
                 dataParser = new GCDataParser();
-                timeParser = new GCTimeParser();
+                timeParserFactory = new GCTimeParserFactory();
                 uploaderFactory = new GCDataSetUploaderFactory();
                 break;
             case "top":
-                timeParser = new TopTimeParser(logPath);
+                timeParserFactory = new TopTimeParserFactory();
                 dataParser = new TopDataParser();
                 uploaderFactory = new TopDataSetUploaderFactory();
                 break;
@@ -62,6 +64,7 @@ public class LogParser
         }
 
         DataSetUploader dataSetUploader = uploaderFactory.create(uploaderParams);
+        TimeParser timeParser = timeParserFactory.create(timeParserParams);
 
         if (timeZone != null) {
             timeParser.configureTimeZone(timeZone);
