@@ -1,5 +1,6 @@
 package ru.naumen.perfhouse.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,9 @@ import java.text.ParseException;
 
 @Controller
 public class ParseController {
+    @Autowired
+    private LogParser logParser;
+
     @RequestMapping(path = "/parse", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity parseLog(
@@ -26,7 +30,7 @@ public class ParseController {
             @RequestParam(name = "logTrace") String logTrace
     )throws IOException, ParseException, InvalidParameterException, DBCloseException {
         boolean requiredLogTrace = logTrace.equals("required");
-        LogParser.parse(influxDb, mode, logPath, timeZone, requiredLogTrace);
+        logParser.parse(influxDb, mode, logPath, timeZone, requiredLogTrace);
         return new ResponseEntity<>("Completed parsing", HttpStatus.OK);
     }
 }

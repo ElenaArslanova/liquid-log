@@ -14,21 +14,25 @@ public class TopTimeParser implements TimeParser {
     private String dataDate;
     private long computedTime;
 
-    public TopTimeParser(String file) throws IllegalArgumentException
+    public TopTimeParser() throws IllegalArgumentException
     {
-        //Supports these masks in file name: YYYYmmdd, YYY-mm-dd i.e. 20161101, 2016-11-01
-        Matcher matcher = Pattern.compile("\\d{8}|\\d{4}-\\d{2}-\\d{2}").matcher(file);
-        if (!matcher.find())
-        {
-            throw new IllegalArgumentException();
-        }
-        this.dataDate = matcher.group(0).replaceAll("-", "");
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
     @Override
     public void configureTimeZone(String timeZone) {
         sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+    }
+
+    @Override
+    public void setLogPath(String logPath) {
+        //Supports these masks in file name: YYYYmmdd, YYY-mm-dd i.e. 20161101, 2016-11-01
+        Matcher matcher = Pattern.compile("\\d{8}|\\d{4}-\\d{2}-\\d{2}").matcher(logPath);
+        if (!matcher.find())
+        {
+            throw new IllegalArgumentException();
+        }
+        this.dataDate = matcher.group(0).replaceAll("-", "");
     }
 
     @Override
