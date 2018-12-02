@@ -43,4 +43,9 @@ public class SdngTimeParser implements TimeParser {
     public void configureTimeZone(String timeZone) {
         DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
+
+    @Override
+    public void setLogPath(String logPath) {
+
+    }
 }

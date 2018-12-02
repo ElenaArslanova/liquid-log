@@ -5,4 +5,5 @@ import java.text.ParseException;
 public interface TimeParser {
     long parseLine(String line) throws ParseException;
     void configureTimeZone(String timeZone);
+    void setLogPath(String logPath);
 }

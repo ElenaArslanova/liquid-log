@@ -6,24 +6,62 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.naumen.perfhouse.uploaders.*;
 import ru.naumen.sd40.log.parser.gc.GCDataParser;
-import ru.naumen.sd40.log.parser.gc.GCTimeParser;
+import ru.naumen.sd40.log.parser.gc.GCTimeParserFactory;
 import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
-import ru.naumen.sd40.log.parser.sdng.SdngTimeParser;
+import ru.naumen.sd40.log.parser.sdng.SdngTimeParserFactory;
 import ru.naumen.sd40.log.parser.top.TopDataParser;
-import ru.naumen.sd40.log.parser.top.TopTimeParser;
+import ru.naumen.sd40.log.parser.top.TopTimeParserFactory;
 
 /**
  * Created by doki on 22.10.16.
  */
+@Component
 public class LogParser
 {
-    public static void parse(String influxDb,
-                             String mode,
-                             String logPath,
-                             String timeZone,
-                             boolean requiredLogTrace) throws IOException, ParseException, InvalidParameterException{
+    private SdngDataParser sdngDataParser;
+    private GCDataParser gcDataParser;
+    private TopDataParser topDataParser;
+
+    private SdngDataSetUploaderFactory sdngDataSetUploaderFactory;
+    private GCDataSetUploaderFactory gcDataSetUploaderFactory;
+    private TopDataSetUploaderFactory topDataSetUploaderFactory;
+
+    private SdngTimeParserFactory sdngTimeParserFactory;
+    private GCTimeParserFactory gcTimeParserFactory;
+    private TopTimeParserFactory topTimeParserFactory;
+
+    @Autowired
+    public LogParser(SdngDataParser sdngDataParser,
+                     GCDataParser gcDataParser,
+                     TopDataParser topDataParser,
+                     SdngDataSetUploaderFactory sdngDataSetUploaderFactory,
+                     GCDataSetUploaderFactory gcDataSetUploaderFactory,
+                     TopDataSetUploaderFactory topDataSetUploaderFactory,
+                     SdngTimeParserFactory sdngTimeParserFactory,
+                     GCTimeParserFactory gcTimeParserFactory,
+                     TopTimeParserFactory topTimeParserFactory){
+        this.sdngDataParser = sdngDataParser;
+        this.gcDataParser = gcDataParser;
+        this.topDataParser = topDataParser;
+
+        this.sdngDataSetUploaderFactory = sdngDataSetUploaderFactory;
+        this.gcDataSetUploaderFactory = gcDataSetUploaderFactory;
+        this.topDataSetUploaderFactory = topDataSetUploaderFactory;
+
+        this.sdngTimeParserFactory = sdngTimeParserFactory;
+        this.gcTimeParserFactory = gcTimeParserFactory;
+        this.topTimeParserFactory = topTimeParserFactory;
+    }
+
+    public void parse(String influxDb,
+                      String mode,
+                      String logPath,
+                      String timeZone,
+                      boolean requiredLogTrace) throws IOException, ParseException, InvalidParameterException{
         influxDb = influxDb.replaceAll("-", "_");
 
         UploaderParams uploaderParams = new UploaderParams(
@@ -34,27 +72,27 @@ public class LogParser
                 requiredLogTrace);
 
         DataParser dataParser;
-        TimeParser timeParser;
+        TimeParserFactory timeParserFactory;
         DataSetUploaderFactory uploaderFactory;
 
         switch (mode)
         {
             case "sdng":
                 //Parse sdng
-                dataParser = new SdngDataParser();
-                timeParser = new SdngTimeParser();
-                uploaderFactory = new SdngDataSetUploaderFactory();
+                dataParser = sdngDataParser;
+                timeParserFactory = sdngTimeParserFactory;
+                uploaderFactory = sdngDataSetUploaderFactory;
                 break;
             case "gc":
                 //Parse gc log
-                dataParser = new GCDataParser();
-                timeParser = new GCTimeParser();
-                uploaderFactory = new GCDataSetUploaderFactory();
+                dataParser = gcDataParser;
+                timeParserFactory = gcTimeParserFactory;
+                uploaderFactory = gcDataSetUploaderFactory;
                 break;
             case "top":
-                timeParser = new TopTimeParser(logPath);
-                dataParser = new TopDataParser();
-                uploaderFactory = new TopDataSetUploaderFactory();
+                dataParser = topDataParser;
+                timeParserFactory = topTimeParserFactory;
+                uploaderFactory = topDataSetUploaderFactory;
                 break;
             default:
                 throw new IllegalArgumentException(
@@ -62,6 +100,8 @@ public class LogParser
         }
 
         DataSetUploader dataSetUploader = uploaderFactory.create(uploaderParams);
+        TimeParser timeParser = timeParserFactory.create();
+        timeParser.setLogPath(logPath);
 
         if (timeZone != null) {
             timeParser.configureTimeZone(timeZone);
