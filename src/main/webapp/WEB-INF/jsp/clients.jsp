@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.Set" %>
 <html>
 
 <head>
@@ -63,9 +64,9 @@
             <div class="form-group col-md-6">
                 <label>Mode:</label>
                 <select class="form-control" name="mode" required>
-                    <option value="sdng">SDNG</option>
-                    <option value="gc">GC</option>
-                    <option value="top">TOP</option>
+                    <% for(String mode: (Set<String>)request.getAttribute("modes")){ %>
+                            <option><%= mode.toUpperCase() %></option>
+                    <% }%>
                 </select>
             </div>
             <div class="form-group col-md-6">
