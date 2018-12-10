@@ -1,4 +1,5 @@
-<%@page import="ru.naumen.perfhouse.statdata.Constants"%>
+<%@ page import="ru.naumen.sd40.log.parser.modes.Constants" %>
+<%@ page import="ru.naumen.sd40.log.parser.modes.gc.data.GCDataType" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
@@ -24,9 +25,9 @@
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
-    Number gcTimes[]=  (Number[])request.getAttribute(Constants.GarbageCollection.GCTIMES);
-    Number gcAvg[] = (Number[])request.getAttribute(Constants.GarbageCollection.AVARAGE_GC_TIME);
-    Number gcMax[] = (Number[])request.getAttribute(Constants.GarbageCollection.MAX_GC_TIME);
+    Number gcTimes[]=  (Number[])request.getAttribute(GCDataType.GarbageCollection.GCTIMES);
+    Number gcAvg[] = (Number[])request.getAttribute(GCDataType.GarbageCollection.AVARAGE_GC_TIME);
+    Number gcMax[] = (Number[])request.getAttribute(GCDataType.GarbageCollection.MAX_GC_TIME);
     
   //Prepare links
   	String path="";

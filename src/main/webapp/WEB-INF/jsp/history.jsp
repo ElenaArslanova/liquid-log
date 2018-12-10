@@ -1,10 +1,10 @@
-<%@page import="ru.naumen.perfhouse.statdata.Constants"%>
+<%@ page import="ru.naumen.sd40.log.parser.modes.Constants" %>
+<%@ page import="ru.naumen.sd40.log.parser.modes.sdng.data.SdngDataType" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.List" %>
 <%@ page import="java.util.Date" %>
 <%@ page import="org.influxdb.dto.QueryResult.Series" %>
-<%@ page import="ru.naumen.perfhouse.statdata.Constants.ResponseTimes" %>
 
 <html>
 
@@ -24,15 +24,15 @@
 
 <script src="http://code.highcharts.com/highcharts.js"></script>
 <%
-    Number p50[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE50);
-    Number p95[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE95);
-    Number p99[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE99);
-    Number p999[] = (Number[])request.getAttribute(Constants.ResponseTimes.PERCENTILE999);
-    Number p100[] = (Number[])request.getAttribute(Constants.ResponseTimes.MAX);
-    Number count[]= (Number[])request.getAttribute(Constants.ResponseTimes.COUNT);
-    Number errors[]= (Number[])request.getAttribute(Constants.ResponseTimes.ERRORS);
-    Number mean[]= (Number[])request.getAttribute(Constants.ResponseTimes.MEAN);
-    Number stddev[]= (Number[])request.getAttribute(Constants.ResponseTimes.STDDEV);
+    Number p50[] = (Number[])request.getAttribute(SdngDataType.ResponseTimes.PERCENTILE50);
+    Number p95[] = (Number[])request.getAttribute(SdngDataType.ResponseTimes.PERCENTILE95);
+    Number p99[] = (Number[])request.getAttribute(SdngDataType.ResponseTimes.PERCENTILE99);
+    Number p999[] = (Number[])request.getAttribute(SdngDataType.ResponseTimes.PERCENTILE999);
+    Number p100[] = (Number[])request.getAttribute(SdngDataType.ResponseTimes.MAX);
+    Number count[]= (Number[])request.getAttribute(SdngDataType.ResponseTimes.COUNT);
+    Number errors[]= (Number[])request.getAttribute(SdngDataType.ResponseTimes.ERRORS);
+    Number mean[]= (Number[])request.getAttribute(SdngDataType.ResponseTimes.MEAN);
+    Number stddev[]= (Number[])request.getAttribute(SdngDataType.ResponseTimes.STDDEV);
     Number times[] = (Number[])request.getAttribute(Constants.TIME);
     
   //Prepare links

@@ -3,7 +3,7 @@ package ru.naumen.perfhouse.uploaders;
 import org.influxdb.dto.BatchPoints;
 import ru.naumen.perfhouse.DBCloseException;
 import ru.naumen.perfhouse.influx.InfluxDAO;
-import ru.naumen.sd40.log.parser.dataset.DataSet;
+import ru.naumen.sd40.log.parser.modes.dataset.DataSet;
 
 public abstract class DBUploader<T extends DataSet> implements AutoCloseable{
     protected InfluxDAO storage;

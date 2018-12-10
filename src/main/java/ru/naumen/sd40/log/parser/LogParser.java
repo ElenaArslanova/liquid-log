@@ -9,8 +9,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.naumen.perfhouse.uploaders.UploaderParams;
 import ru.naumen.perfhouse.uploaders.*;
-import ru.naumen.sd40.log.parser.mode.Mode;
+import ru.naumen.sd40.log.parser.modes.Mode;
 
 /**
  * Created by doki on 22.10.16.

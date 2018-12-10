@@ -1,6 +1,6 @@
 package ru.naumen.sd40.log.parser;
 
-import ru.naumen.sd40.log.parser.dataset.DataSet;
+import ru.naumen.sd40.log.parser.modes.dataset.DataSet;
 
 import java.io.IOException;
 import java.text.ParseException;

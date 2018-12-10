@@ -1,9 +1,8 @@
 package ru.naumen.perfhouse.uploaders;
 
-import ru.naumen.perfhouse.uploaders.DBUploader;
 import ru.naumen.perfhouse.DBCloseException;
-import ru.naumen.sd40.log.parser.dataset.DataSet;
-import ru.naumen.sd40.log.parser.dataset.DataSetFactory;
+import ru.naumen.sd40.log.parser.modes.dataset.DataSet;
+import ru.naumen.sd40.log.parser.modes.dataset.DataSetFactory;
 
 import java.security.InvalidParameterException;
 

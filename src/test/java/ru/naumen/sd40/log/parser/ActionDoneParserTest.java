@@ -2,8 +2,8 @@ package ru.naumen.sd40.log.parser;
 
 import org.junit.Assert;
 import org.junit.Test;
-import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
-import ru.naumen.sd40.log.parser.sdng.SdngDataParser;
+import ru.naumen.sd40.log.parser.modes.sdng.data.SdngDataSet;
+import ru.naumen.sd40.log.parser.modes.sdng.parsers.SdngDataParser;
 
 public class ActionDoneParserTest{
     private SdngDataSet dataSet = new SdngDataSet();
@@ -78,7 +78,7 @@ public class ActionDoneParserTest{
         parser.parseActionLine("Done(10): GetDtObjectForRelObjListAction", dataSet);
 
         //then:
-        Assert.assertEquals(7, dataSet.getActionsDoneData().geListActions());
+        Assert.assertEquals(7, dataSet.getActionsDoneData().getListActions());
     }
 
     @Test

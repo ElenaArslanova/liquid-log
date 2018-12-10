@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import ru.naumen.perfhouse.DBCloseException;
 import ru.naumen.perfhouse.uploaders.DataSetUploader;
-import ru.naumen.perfhouse.uploaders.SdngUploader;
-import ru.naumen.sd40.log.parser.dataset.SdngDataSet;
-import ru.naumen.sd40.log.parser.dataset.SdngDataSetFactory;
+import ru.naumen.sd40.log.parser.modes.sdng.uploader.SdngUploader;
+import ru.naumen.sd40.log.parser.modes.sdng.data.SdngDataSet;
+import ru.naumen.sd40.log.parser.modes.sdng.data.SdngDataSetFactory;
 
 import java.security.InvalidParameterException;
 
