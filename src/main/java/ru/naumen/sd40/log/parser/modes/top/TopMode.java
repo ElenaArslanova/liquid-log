@@ -5,8 +5,10 @@ import org.springframework.stereotype.Component;
 import ru.naumen.perfhouse.uploaders.DataSetUploader;
 import ru.naumen.perfhouse.uploaders.UploaderParams;
 import ru.naumen.sd40.log.parser.DataParser;
+import ru.naumen.sd40.log.parser.DataType;
 import ru.naumen.sd40.log.parser.TimeParser;
 import ru.naumen.sd40.log.parser.modes.Mode;
+import ru.naumen.sd40.log.parser.modes.top.data.TopDataType;
 import ru.naumen.sd40.log.parser.modes.top.parsers.TopDataParser;
 import ru.naumen.sd40.log.parser.modes.top.data.TopDataSetUploaderFactory;
 import ru.naumen.sd40.log.parser.modes.top.parsers.TopTimeParserFactory;
@@ -39,5 +41,10 @@ public class TopMode implements Mode {
     @Override
     public DataSetUploader getDataSetUploader(UploaderParams params) {
         return dataSetUploaderFactory.create(params);
+    }
+
+    @Override
+    public DataType[] getDataTypes() {
+        return TopDataType.values();
     }
 }

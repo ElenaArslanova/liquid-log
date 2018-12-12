@@ -18,7 +18,7 @@ public enum GCDataType implements DataType {
 
     @Override
     public List<String> getTypeProperties() {
-        return null;
+        return properties;
     }
 
     public static class GarbageCollection

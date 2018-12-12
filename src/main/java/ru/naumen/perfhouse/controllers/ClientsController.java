@@ -57,14 +57,14 @@ public class ClientsController
         DateTime yesterday = now.minusDays(1);
 
         clients.forEach(it -> {
-            clientLinks.put(it, "/history/" + it + "/" + yesterday.getYear() + "/" + yesterday.getMonthOfYear() + "/"
+            clientLinks.put(it, "/datatype/" + it + "?year=" + yesterday.getYear() + "&month=" + yesterday.getMonthOfYear() + "&day="
                     + yesterday.getDayOfMonth());
 
-            clientMonthLinks.put(it, "/history/" + it + "/" + now.getYear() + "/" + now.getMonthOfYear());
+            clientMonthLinks.put(it, "/datatype/" + it + "?year=" + now.getYear() + "&month=" + now.getMonthOfYear());
             clientPreviousMonthLinks.put(it,
-                    "/history/" + it + "/" + prevMonth.getYear() + "/" + prevMonth.getMonthOfYear());
-            clientLast864Links.put(it, "/history/" + it + "?count=864");
-            clientLast2016Links.put(it, "/history/" + it + "?count=2016");
+                    "/datatype/" + it + "?year=" + prevMonth.getYear() + "&month=" + prevMonth.getMonthOfYear());
+            clientLast864Links.put(it, "/datatype/" + it + "?count=864");
+            clientLast2016Links.put(it, "/datatype/" + it + "?count=2016");
         });
 
         HashMap<String, Object> model = new HashMap<>();
